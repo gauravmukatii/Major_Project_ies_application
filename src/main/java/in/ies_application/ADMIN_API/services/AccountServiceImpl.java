@@ -1,5 +1,6 @@
 package in.ies_application.ADMIN_API.services;
 
+import in.ies_application.ADMIN_API.bindings.UnlockAccForm;
 import in.ies_application.ADMIN_API.bindings.UserAccForm;
 import in.ies_application.ADMIN_API.entity.UserEntity;
 import in.ies_application.ADMIN_API.repos.UserRepo;
@@ -8,7 +9,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -41,17 +44,49 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<UserAccForm> fetchUserAccounts() {
+        List<UserEntity> userEntities = userRepo.findAll();
+        List<UserAccForm> users = new ArrayList<>();
+
+        for(UserEntity userEntity: userEntities){
+            UserAccForm user = new UserAccForm();
+            BeanUtils.copyProperties(userEntity, user);
+            users.add(user);
+        }
+        return users;
+    }
+
+    @Override
+    public UserAccForm getUserAccById(Long accId) {
+        Optional<UserEntity> optional = userRepo.findById(accId);
+        if(optional.isPresent()){
+            UserEntity userEntity = optional.get();
+            UserAccForm user = new UserAccForm();
+            BeanUtils.copyProperties(userEntity, user);
+            return user;
+        }
         return null;
     }
 
     @Override
-    public UserAccForm getUserAccById(Integer accId) {
-        return null;
+    public String changeAccStatus(Long accId, String status) {
+        int cnt = userRepo.updateAccStatus(accId, status);
+        if(cnt>0){
+            return "Status Changed";
+        }
+        return "Failed to Change Status";
     }
 
     @Override
-    public String changeAccStatus(Integer accId, String status) {
-        return null;
+    public String unlocUserAccount(UnlockAccForm unlockAccForm) {
+        UserEntity userEntity = userRepo.findByEmailAndPassword(unlockAccForm.getEmail(), unlockAccForm.getTempPwd());
+
+        if(userEntity != null){
+            userEntity.setPwd(unlockAccForm.getNewPwd());
+            userEntity.setAccStatus("UNLOCKED");
+            userRepo.save(userEntity);
+            return "password changed successfully and now your account is unlocked. Please Login!!";
+        }
+        return "Invalid Credentials";
     }
 
     private String generatePwd(){

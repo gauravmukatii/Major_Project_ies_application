@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class DashboardCard {
 
-    private Integer plansCnt;
-    private Integer approveCnt;
-    private Integer denielCnt;
+    private Long plansCnt;
+    private Long approveCnt;
+    private Long denielCnt;
     private Double benefitAmtGiven;
 }
