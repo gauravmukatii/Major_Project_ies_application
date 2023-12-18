@@ -15,6 +15,4 @@ public interface AccountService {
 
     public String changeAccStatus(Long accId, String status);
 
-    public String unlocUserAccount(UnlockAccForm unlockAccForm);
-
 }

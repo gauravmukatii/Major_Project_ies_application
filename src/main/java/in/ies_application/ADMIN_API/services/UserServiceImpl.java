@@ -70,6 +70,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String unlockUserAccount(UnlockAccForm unlockAccForm) {
-        return null;
+        UserEntity userEntity = userRepo.findByEmailAndPassword(unlockAccForm.getEmail(), unlockAccForm.getTempPwd());
+
+        if(userEntity != null){
+            userEntity.setPwd(unlockAccForm.getNewPwd());
+            userEntity.setAccStatus("UNLOCKED");
+            userRepo.save(userEntity);
+            return "password changed successfully and now your account is unlocked. Please Login!!";
+        }
+        return "Invalid Credentials";
     }
 }

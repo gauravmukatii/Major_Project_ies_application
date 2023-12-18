@@ -76,19 +76,6 @@ public class AccountServiceImpl implements AccountService {
         return "Failed to Change Status";
     }
 
-    @Override
-    public String unlocUserAccount(UnlockAccForm unlockAccForm) {
-        UserEntity userEntity = userRepo.findByEmailAndPassword(unlockAccForm.getEmail(), unlockAccForm.getTempPwd());
-
-        if(userEntity != null){
-            userEntity.setPwd(unlockAccForm.getNewPwd());
-            userEntity.setAccStatus("UNLOCKED");
-            userRepo.save(userEntity);
-            return "password changed successfully and now your account is unlocked. Please Login!!";
-        }
-        return "Invalid Credentials";
-    }
-
     private String generatePwd(){
         // create a string of all characters
         String UpperCaseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
