@@ -2,6 +2,7 @@ package in.ies_application.ADMIN_API.services;
 
 import in.ies_application.ADMIN_API.bindings.UnlockAccForm;
 import in.ies_application.ADMIN_API.bindings.UserAccForm;
+import in.ies_application.ADMIN_API.constants.AppConstants;
 import in.ies_application.ADMIN_API.entity.UserEntity;
 import in.ies_application.ADMIN_API.repos.UserRepo;
 import in.ies_application.ADMIN_API.utils.EmailUtils;
@@ -118,9 +119,9 @@ public class AccountServiceImpl implements AccountService {
         StringBuilder sb = new StringBuilder();
         try (Stream<String> lines = Files.lines(Paths.get(filename))) {
             lines.forEach(line -> {
-                line = line.replace("${FNAME}", user.getFullName());
-                line = line.replace("${TEMP_PWD}", user.getPwd());
-                line = line.replace("${EMAIL}", user.getEmail());
+                line = line.replace(AppConstants.FNAME, user.getFullName());
+                line = line.replace(AppConstants.PWD, user.getPwd());
+                line = line.replace(AppConstants.EMAIL, user.getEmail());
                 sb.append(line);
             });
         } catch (Exception e) {

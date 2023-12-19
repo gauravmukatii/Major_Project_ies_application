@@ -3,6 +3,7 @@ package in.ies_application.ADMIN_API.rest;
 import in.ies_application.ADMIN_API.bindings.DashboardCard;
 import in.ies_application.ADMIN_API.bindings.LoginForm;
 import in.ies_application.ADMIN_API.bindings.UserAccForm;
+import in.ies_application.ADMIN_API.constants.AppConstants;
 import in.ies_application.ADMIN_API.services.AccountService;
 import in.ies_application.ADMIN_API.services.UserService;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class UserRestController {
     public String userLogin(@RequestBody LoginForm loginForm){
         logger.info("Received login request for email: {}", loginForm.getEmail());
         String status = userService.userLogin(loginForm);
-        if(status.equals("success")){
+        if(status.equals(AppConstants.SUCCESS)){
             logger.info("Login successful for user with email: {}", loginForm.getEmail());
             return "redirect:/dashboard?email="+loginForm.getEmail();
         }else{

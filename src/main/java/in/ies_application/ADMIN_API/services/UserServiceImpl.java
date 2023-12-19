@@ -4,6 +4,7 @@ import in.ies_application.ADMIN_API.bindings.DashboardCard;
 import in.ies_application.ADMIN_API.bindings.LoginForm;
 import in.ies_application.ADMIN_API.bindings.UnlockAccForm;
 import in.ies_application.ADMIN_API.bindings.UserAccForm;
+import in.ies_application.ADMIN_API.constants.AppConstants;
 import in.ies_application.ADMIN_API.entity.EligEntity;
 import in.ies_application.ADMIN_API.entity.UserEntity;
 import in.ies_application.ADMIN_API.repos.EligRepo;
@@ -36,10 +37,10 @@ public class UserServiceImpl implements UserService {
 
         if(user == null){
             return "Invalid Credentials";
-        }else if("Y".equals(user.getActiveSw()) && "UNLOCKED".equals(user.getAccStatus())){
-            return "success";
+        }else if((AppConstants.Y).equals(user.getActiveSw()) && (AppConstants.ACCOUNT_LOCKED_INACTIVE).equals(user.getAccStatus())){
+            return AppConstants.SUCCESS;
         }else{
-            return "Account Locked/Inactive";
+            return AppConstants.ACCOUNT_LOCKED_INACTIVE;
         }
     }
 
@@ -47,8 +48,8 @@ public class UserServiceImpl implements UserService {
     public boolean recoverPwd(String email) {
         UserEntity userEntity = userRepo.findByEmail(email);
         if(userEntity != null){
-            String subject = "Recover Pwd";
-            String body = readEmailBody("FORGOT_PWD_EMAIL_BODY.txt", userEntity);
+            String subject = AppConstants.RECOVER_PWD_SUBJECT;
+            String body = readEmailBody(AppConstants.FORGOT_PWD_EMAIL_BODY_FILE, userEntity);
             return emailUtils.sendEmail(subject, body, userEntity.getEmail());
         }
         return false;
@@ -60,8 +61,8 @@ public class UserServiceImpl implements UserService {
 
         List<EligEntity> eligList = eligRepo.findAll();
 
-        Long approvedCnt = eligList.stream().filter(ed -> ed.getPlanStatus().equals("AP")).count();
-        Long denielCnt = eligList.stream().filter(ed -> ed.getPlanStatus().equals("DN")).count();
+        Long approvedCnt = eligList.stream().filter(ed -> ed.getPlanStatus().equals(AppConstants.AP)).count();
+        Long denielCnt = eligList.stream().filter(ed -> ed.getPlanStatus().equals(AppConstants.DP)).count();
         Double benefitAmt = eligList.stream().mapToDouble(ed -> ed.getBenefitAmt()).sum();
 
         DashboardCard card = new DashboardCard();
@@ -88,20 +89,20 @@ public class UserServiceImpl implements UserService {
 
         if(userEntity != null){
             userEntity.setPwd(unlockAccForm.getNewPwd());
-            userEntity.setAccStatus("UNLOCKED");
+            userEntity.setAccStatus(AppConstants.UNLOCKED);
             userRepo.save(userEntity);
-            return "password changed successfully and now your account is unlocked. Please Login!!";
+            return AppConstants.PWD_CHANGED_SUCCESS;
         }
-        return "Invalid Credentials";
+        return AppConstants.INVALID_CRED;
     }
 
     private String readEmailBody(String filename, UserEntity user){
         StringBuilder sb = new StringBuilder();
         try(Stream<String> lines = Files.lines(Paths.get(filename))) {
             lines.forEach(line -> {
-                line = line.replace("${FNAME}", user.getFullName());
-                line = line.replace("${PWD}", user.getPwd());
-                line = line.replace("${EMAIL}", user.getEmail());
+                line = line.replace(AppConstants.FNAME, user.getFullName());
+                line = line.replace(AppConstants.EMAIL, user.getPwd());
+                line = line.replace(AppConstants.PWD, user.getEmail());
                 sb.append(line);
             });
         } catch (Exception e){
