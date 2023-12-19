@@ -11,5 +11,5 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
     @Query("update UserEntity set accStatus=:status where userId=:userId")
     public Integer updateAccStatus(Long userId, String status);
     public UserEntity findByEmail(String email);
-    public UserEntity findByEmailAndPassword(String email, String pwd);
+    public UserEntity findByEmailAndPwd(String email, String pwd);
 }

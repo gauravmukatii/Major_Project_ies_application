@@ -30,7 +30,7 @@ public class AccountRestController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @PostMapping("/user/{userId")
+    @PostMapping("/user/{userId}")
     public ResponseEntity<UserAccForm> getUser(@PathVariable("userId") Long userid){
         UserAccForm user = accountService.getUserAccById(userid);
         return new ResponseEntity<>(user, HttpStatus.OK);

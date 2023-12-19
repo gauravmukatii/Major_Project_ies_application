@@ -9,4 +9,5 @@ public class DashboardCard {
     private Long approveCnt;
     private Long denielCnt;
     private Double benefitAmtGiven;
+    private UserAccForm user;
 }
