@@ -1,0 +1,33 @@
+server:
+  port: 5050
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./Desktop/Major Project/h2_database/iesdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
+  #  mail starter smtp configuration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gaurav.sirali@gmail.com
+    password: gkyfnuwzmmcriihs
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
