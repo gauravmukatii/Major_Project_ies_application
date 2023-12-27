@@ -9,6 +9,7 @@ import in.ies_application.ADMIN_API.utils.EmailUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -73,6 +74,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public String changeAccStatus(Long accId, String status) {
         int cnt = userRepo.updateAccStatus(accId, status);
         if(cnt>0){
